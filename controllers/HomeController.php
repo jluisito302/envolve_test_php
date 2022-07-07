@@ -1,6 +1,6 @@
 <?php
-
-require './models/UsersModel.php';
+require_once './controllers/SessionController.php';
+require_once './models/UsersModel.php';
 
 class HomeController extends Controller{
 
@@ -11,11 +11,17 @@ class HomeController extends Controller{
     }
 
     public function index(){
-        $usersModel = new UsersModel();
+        $session = new SessionController();
+        if ($session->existsSession()) {
+            $usersModel = new UsersModel();
 
-        $allUsers = $usersModel->users(); 
-        $this->view->users = $allUsers;
-        $this->view->render('home');
+            $allUsers = $usersModel->users(); 
+            $this->view->users = $allUsers;
+            $this->view->render('home');
+        }else{
+            header('Location: '.constant('URL').'login');
+        }
+        
     }
     //METHOD FOR SEARCH COLORS
     public function colors(){
